@@ -1,9 +1,9 @@
 {
-  "name": "discourse-first-time-experience",
+  "name": "Discourse Welcome Modal",
   "component": true,
   "license_url": null,
   "about_url": null,
-  "authors": null,
+  "authors": "Noah Lovell",
   "theme_version": "0.0.1",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,

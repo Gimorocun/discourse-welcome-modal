@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
-import FirstTimeModal from "../components/first-time-modal";
+import WelcomeModal from "../components/welcome-modal";
 
 export default apiInitializer((api) => {
-  api.renderInOutlet("above-main-container", FirstTimeModal);
+  api.renderInOutlet("above-main-container", WelcomeModal);
 });

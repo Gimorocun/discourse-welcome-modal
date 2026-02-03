@@ -5,32 +5,48 @@ feature_enabled_date:
 grace_period_months:
   type: integer
   default: 3
+  description: "Number of months after feature enable date to silently mark existing users as seen"
 card_layout:
   type: enum
   default: "grid"
+  description: "Choose how cards are displayed in the welcome modal"
   choices:
     - grid
     - list
 card_content:
   type: objects
   default: []
+  description: "Configure the cards shown in the welcome modal"
   schema:
     name: community_card
     properties:
       id:
         type: string
         required: true
-      imgUrl:
-        type: upload
-        required: true
+        description: "Unique identifier for this card"
       title:
         type: string
         required: true
+        description: "Main heading text for the card"
       subtitle:
         type: string
+        required: true
+        description: "Descriptive text shown below the title"
+      imgUrl:
+        type: upload
+        required: true
+        description: "Image to display on the card"
+      altText:
+        type: string
+        required: true
+        description: "Alt text for the card image (accessibility)"
       btnLabel:
         type: string
+        required: true
+        description: "Text displayed on the card's action button"
       action:
         type: string
+        required: true
+        description: "URL or route to navigate to when button is clicked"
         validations:
           url: true
