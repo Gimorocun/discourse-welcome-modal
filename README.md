@@ -1,58 +1,175 @@
-# Discourse Watch Category Button
+# Discourse First Time Experience
 
-Theme component that enables staff users to create a “Watch this category” button. Clicking it sets the **current user’s** category notification level to Watching. It uses the Discourse API via the current logged-in user’s session - behind the scenes the operation is the same as going to the category page and clicking the 'Watching' bell.
+A Discourse theme component that provides a welcoming onboarding modal for new users, guiding them to engage with the community.
 
-## Why is this needed?
+## Overview
 
-Although I have over a decade of experience managing Discourses for communities, I still find that many users are not aware of the category notification settings. This component makes it easy for staff to add a button in posts (e.g., welcome posts, announcements) to encourage users to watch important categories. I hope this will help improve user engagement and ensure that important updates are not missed.
+This theme component displays a friendly modal dialog to new users when they first visit your Discourse forum. The modal highlights key ways to participate in the community and encourages immediate engagement through clear calls-to-action.
 
-## How it works
+## Features
 
-### Put a 'Watch Category *X*' button in a post
+- **Automatic Display**: Shows a welcome modal to users on their first visit
+- **Smart Targeting**: Only appears for users who joined after the launch date (configurable)
+- **Persistent Dismissal**: Remembers when users have seen the modal (via localStorage)
+- **Grace Period**: Configurable time window for showing the modal to new users
+- **Three Engagement Paths**:
+  - **Ask the Community**: Directs users to ask questions
+  - **Share Your Expertise**: Encourages showcasing work
+  - **Help Others**: Points to unanswered questions
+- **Responsive Design**: Adapts to mobile and desktop viewports
+- **Debug Tools**: Built-in query parameters for testing
 
-Staff users can use this markup inside a post to create a button:
+## Installation
+
+1. Navigate to your Discourse Admin panel
+2. Go to **Admin** → **Customize** → **Themes**
+3. Click **Install** → **From a git repository**
+4. Enter the repository URL: `https://github.com/noahLovell/discourse-first-time-experience`
+5. Click **Install**
+6. Enable the theme component on your active theme
+
+## Configuration
+
+### Launch Date & Grace Period
+
+Edit [`walkthrough-state.js`](javascripts/discourse/lib/walkthrough-state.js) to customize:
+
+```javascript
+const LAUNCH_DATE = new Date("2026-02-01");
+const GRACE_PERIOD_MONTHS = 6;
+```
+
+- **LAUNCH_DATE**: Users created before this date won't see the modal
+- **GRACE_PERIOD_MONTHS**: How long after LAUNCH_DATE to continue showing the modal to new users
+
+### Forum Sections
+
+Customize the three sections in [`first-time-modal.gjs`](javascripts/discourse/connectors/above-main-container/first-time-modal.gjs):
+
+```javascript
+get forumSections() {
+  return [
+    {
+      id: "ask-the-community",
+      imgUrl: "https://example.com/image.png",
+      title: "Your Title",
+      subtitle: "Your description",
+      btnLabel: "Button text",
+      action: "/path/to/action"
+    },
+    // ... more sections
+  ];
+}
+```
+
+## Testing & Debugging
+
+The component includes built-in debugging tools via URL parameters:
+
+| Parameter | Effect |
+|-----------|--------|
+| `?simulate_new_user=true` | Forces the modal to show (ignores localStorage) |
+| `?simulate_existing_user=true` | Forces the modal to hide |
+| `?clear_walkthrough=true` | Clears the localStorage flag |
+
+**Example**: `https://yourforum.com/?simulate_new_user=true`
+
+## File Structure
 
 ```
-<span data-watch-category="3">Watch the category with categoryId 3</span>
+discourse-first-time-experience/
+├── about.json                      # Theme metadata
+├── common/
+│   └── common.scss                 # Styling for the modal
+├── javascripts/
+│   └── discourse/
+│       ├── api-initializers/
+│       │   └── theme-initializer.gjs    # Initializes the walkthrough
+│       ├── connectors/
+│       │   └── above-main-container/
+│       │       └── first-time-modal.gjs # Modal component
+│       └── lib/
+│           └── walkthrough-state.js     # State management & logic
 ```
 
-On posting, the theme component transforms that span into a button.
-If the user clicks on the button, the user's notification level for categoryId 3 will be set to Watching.
-To find out the category ID, go to that category and look at the URL. For example, in `https://discourse.example.com/c/support/5`, the category ID is `5`.
+## How It Works
 
-To target the **current post’s category**, use:
+1. **Initialization**: The theme initializer checks if the current user should see the walkthrough
+2. **Eligibility Check**: Users are eligible if they:
+   - Are logged in
+   - Created their account after `LAUNCH_DATE`
+   - Created their account within the grace period
+   - Haven't seen the walkthrough before (localStorage check)
+3. **Display**: If eligible, the modal appears 500ms after page load
+4. **Interaction**: Users can click a section button or close the modal
+5. **Persistence**: Once dismissed or clicked, the `seen` flag is stored in localStorage
 
+## Browser Support
+
+- Requires modern browsers with localStorage support
+- Fully responsive for mobile and desktop
+- Tested on latest versions of Chrome, Firefox, Safari, and Edge
+
+## Development
+
+### Local Setup
+
+1. Clone the repository
+2. Make your changes to the appropriate files
+3. Test using the debug parameters
+4. Submit a pull request
+
+### Key Components
+
+- **WalkthroughState**: Reactive state management using Glimmer tracking
+- **FirstTimeModal**: Main modal component using Discourse's DModal
+- **Theme Initializer**: API initializer that triggers the modal display
+
+## Customization Tips
+
+### Change Modal Appearance
+
+Edit [`common.scss`](common/common.scss) to customize colors, spacing, and layout.
+
+### Modify Timing
+
+Adjust the delay in [`theme-initializer.gjs`](javascripts/discourse/api-initializers/theme-initializer.gjs):
+
+```javascript
+setTimeout(() => {
+  walkthroughState.isVisible = true;
+}, 500); // Change delay here (milliseconds)
 ```
-<span data-watch-category="current">Watch this category</span>
-```
 
-- `data-watch-category` value = categoryId to watch (or `current` watches the post’s category)
-- `<span>` inner text => button label (defaults to “Watch this category” if empty)
+### Add More Sections
 
-### Who can create buttons
+Add additional objects to the `forumSections` array in the modal component. Each section requires:
+- `id`: Unique identifier
+- `imgUrl`: Image URL for the section
+- `title`: Section heading
+- `subtitle`: Descriptive text
+- `btnLabel`: Button text
+- `action`: URL or route to navigate to
 
-Only posts **authored by users in the allowlist** are transformed into buttons. By default, only `staff` is allowed. All users can see and click the rendered buttons.
+## License
 
-### What happens on click
+[Add your license here]
 
-- POST `/category/{id}/notifications` with `notification_level=3`
-- Button text updates to “Watching ✓”
-- Sometimes a page refresh is needed to start seeing the new notification level in the 'bell' Watching icon.
+## Credits
 
-## Security and privacy considerations
+Developed for Discourse forums to improve new user onboarding and community engagement.
 
-- These buttons can only be created by #staff users (at the moment)
-- Requires an explicit user click to change notification settings.
-- No API keys are used; it relies on the logged-in session.
+## Support
 
-## Roadmap ideas
+For issues, questions, or contributions:
+- **Issues**: [GitHub Issues](https://github.com/noahLovell/discourse-first-time-experience/issues)
+- **Discussions**: [Discourse Meta](https://meta.discourse.org/)
 
-- Make the groups who can create buttons configurable via theme settings.
-- Make the button style configurable via theme settings.
-- Make the Notification Level configurable (e.g., Tracking, Watching, Muted).
+## Version
 
-## Contributing
+Current version: 0.0.1
 
-I'm happy to accept contributions! Please open issues or pull requests on the GitHub repository.
+## Requirements
 
-Ideally let's improve _this_ component rather than forking it to change the ALLOWED_GROUPS or other hard-coded values!
+- Discourse version: 1.8.0+
+- Theme component (not a standalone theme)
