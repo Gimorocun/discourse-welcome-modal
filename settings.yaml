@@ -1,0 +1,36 @@
+feature_enabled_date:
+  type: string
+  default: "2026-01-01"
+  description: "Enter date in YYYY-MM-DD format"
+grace_period_months:
+  type: integer
+  default: 3
+card_layout:
+  type: enum
+  default: "grid"
+  choices:
+    - grid
+    - list
+card_content:
+  type: objects
+  default: []
+  schema:
+    name: community_card
+    properties:
+      id:
+        type: string
+        required: true
+      imgUrl:
+        type: upload
+        required: true
+      title:
+        type: string
+        required: true
+      subtitle:
+        type: string
+      btnLabel:
+        type: string
+      action:
+        type: string
+        validations:
+          url: true

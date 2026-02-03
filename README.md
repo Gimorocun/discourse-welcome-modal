@@ -1,175 +1,139 @@
-# Discourse First Time Experience
+# Discourse First-Time Experience Theme Component
 
-A Discourse theme component that provides a welcoming onboarding modal for new users, guiding them to engage with the community.
+A Discourse theme component that displays a welcome modal to new members, helping them get oriented and engaged with your community.
 
 ## Overview
 
-This theme component displays a friendly modal dialog to new users when they first visit your Discourse forum. The modal highlights key ways to participate in the community and encourages immediate engagement through clear calls-to-action.
+This theme component creates a smart onboarding experience by showing a customizable modal dialog to first-time users. The modal displays cards with information, links, or actions to help new members get started in your community.
 
 ## Features
 
-- **Automatic Display**: Shows a welcome modal to users on their first visit
-- **Smart Targeting**: Only appears for users who joined after the launch date (configurable)
-- **Persistent Dismissal**: Remembers when users have seen the modal (via localStorage)
-- **Grace Period**: Configurable time window for showing the modal to new users
-- **Three Engagement Paths**:
-  - **Ask the Community**: Directs users to ask questions
-  - **Share Your Expertise**: Encourages showcasing work
-  - **Help Others**: Points to unanswered questions
-- **Responsive Design**: Adapts to mobile and desktop viewports
-- **Debug Tools**: Built-in query parameters for testing
+- **Smart Display Logic**: Shows modal only to appropriate users based on join date and configuration
+- **Grace Period Support**: Allows existing members a grace period before showing the modal
+- **Customizable Cards**: Display multiple information cards with images, titles, descriptions, and action buttons
+- **Flexible Layout**: Choose between grid or list layout for cards
+- **External & Internal Links**: Support for both internal Discourse routes and external URLs
+- **Persistent State**: Remembers when users have seen the modal to avoid showing it repeatedly
+- **Responsive Design**: Works across desktop and mobile devices
 
-## Installation
+## How It Works
 
-1. Navigate to your Discourse Admin panel
-2. Go to **Admin** → **Customize** → **Themes**
-3. Click **Install** → **From a git repository**
-4. Enter the repository URL: `https://github.com/noahLovell/discourse-first-time-experience`
-5. Click **Install**
-6. Enable the theme component on your active theme
+### Display Logic
+
+The modal uses intelligent logic to determine when to show:
+
+1. **New Members**: Users who joined after the configured `feature_enabled_date` see the modal immediately
+2. **Grace Period**: Existing members get a grace period (default 3 months) where the modal is silently marked as seen
+3. **After Grace Period**: Long-time members who haven't seen the modal will see it once the grace period expires
+4. **One-Time Display**: Uses localStorage to ensure each user only sees the modal once
+
+### Technical Implementation
+
+- **Component**: `first-time-modal.gjs` - The main modal component with display logic
+- **Initializer**: `theme-initializer.gjs` - Renders the modal in the appropriate outlet
+- **Settings**: Configurable through Discourse admin panel
+- **Localization**: Supports internationalization through locale files
 
 ## Configuration
 
-### Launch Date & Grace Period
+### Settings
 
-Edit [`walkthrough-state.js`](javascripts/discourse/lib/walkthrough-state.js) to customize:
+Configure the component through your Discourse admin panel:
 
-```javascript
-const LAUNCH_DATE = new Date("2026-02-01");
-const GRACE_PERIOD_MONTHS = 6;
+#### `feature_enabled_date`
+- **Type**: String (YYYY-MM-DD format)
+- **Default**: "2026-01-01" 
+- **Description**: The date when this feature was enabled. Users who joined after this date will see the modal.
+
+#### `grace_period_months`
+- **Type**: Integer
+- **Default**: 3
+- **Description**: Number of months to give existing members before showing them the modal.
+
+#### `card_layout`
+- **Type**: Enum (grid/list)
+- **Default**: "grid"
+- **Description**: Layout style for the information cards in the modal.
+
+#### `card_content`
+- **Type**: Objects array
+- **Description**: Array of cards to display in the modal. Each card can contain:
+  - `id`: Unique identifier
+  - `imgUrl`: Upload/URL for card image
+  - `title`: Card title text
+  - `subtitle`: Card description text
+  - `btnLabel`: Button text
+  - `action`: URL or Discourse route for the button action
+
+### Example Card Configuration
+
+```yaml
+card_content:
+  - id: "welcome"
+    imgUrl: "/uploads/welcome.png"
+    title: "Welcome to Our Community"
+    subtitle: "Learn about our community guidelines and values"
+    btnLabel: "Read Guidelines"
+    action: "/guidelines"
+  - id: "introduce"
+    imgUrl: "/uploads/introduce.png"
+    title: "Introduce Yourself"
+    subtitle: "Tell us about yourself in our introductions category"
+    btnLabel: "Introduce Yourself"
+    action: "/c/introductions"
 ```
 
-- **LAUNCH_DATE**: Users created before this date won't see the modal
-- **GRACE_PERIOD_MONTHS**: How long after LAUNCH_DATE to continue showing the modal to new users
+## Localization
 
-### Forum Sections
+The component supports internationalization. Default strings are in English:
 
-Customize the three sections in [`first-time-modal.gjs`](javascripts/discourse/connectors/above-main-container/first-time-modal.gjs):
+- `first_time_member.modal_title`: "Join the conversation"
+- `first_time_member.modal_close_btn`: "Done"
 
-```javascript
-get forumSections() {
-  return [
-    {
-      id: "ask-the-community",
-      imgUrl: "https://example.com/image.png",
-      title: "Your Title",
-      subtitle: "Your description",
-      btnLabel: "Button text",
-      action: "/path/to/action"
-    },
-    // ... more sections
-  ];
-}
-```
+Add translations to your locale files as needed.
 
-## Testing & Debugging
+## Installation
 
-The component includes built-in debugging tools via URL parameters:
+1. Go to your Discourse Admin Panel
+2. Navigate to Appearance → Themes
+3. Click "Install" and select "From a git repository"
+4. Enter the repository URL
+5. Install as a Theme Component
+6. Add the component to your active theme
+7. Configure the settings through the theme settings panel
 
-| Parameter | Effect |
-|-----------|--------|
-| `?simulate_new_user=true` | Forces the modal to show (ignores localStorage) |
-| `?simulate_existing_user=true` | Forces the modal to hide |
-| `?clear_walkthrough=true` | Clears the localStorage flag |
+## Browser Compatibility
 
-**Example**: `https://yourforum.com/?simulate_new_user=true`
+- Uses modern JavaScript features (async/await, localStorage)
+- Compatible with all modern browsers
+- Graceful degradation for older browsers
 
 ## File Structure
 
 ```
-discourse-first-time-experience/
-├── about.json                      # Theme metadata
-├── common/
-│   └── common.scss                 # Styling for the modal
+├── about.json                    # Theme metadata
+├── settings.yaml                 # Configuration schema
+├── locales/
+│   └── en.yml                   # English translations
 ├── javascripts/
 │   └── discourse/
-│       ├── api-initializers/
-│       │   └── theme-initializer.gjs    # Initializes the walkthrough
-│       ├── connectors/
-│       │   └── above-main-container/
-│       │       └── first-time-modal.gjs # Modal component
-│       └── lib/
-│           └── walkthrough-state.js     # State management & logic
+│       ├── components/
+│       │   └── first-time-modal.gjs    # Main modal component
+│       └── api-initializers/
+│           └── theme-initializer.gjs   # Component initializer
+└── common/
+    └── common.scss              # Styling (if needed)
 ```
 
-## How It Works
+## Contributing
 
-1. **Initialization**: The theme initializer checks if the current user should see the walkthrough
-2. **Eligibility Check**: Users are eligible if they:
-   - Are logged in
-   - Created their account after `LAUNCH_DATE`
-   - Created their account within the grace period
-   - Haven't seen the walkthrough before (localStorage check)
-3. **Display**: If eligible, the modal appears 500ms after page load
-4. **Interaction**: Users can click a section button or close the modal
-5. **Persistence**: Once dismissed or clicked, the `seen` flag is stored in localStorage
+When contributing to this theme component:
 
-## Browser Support
-
-- Requires modern browsers with localStorage support
-- Fully responsive for mobile and desktop
-- Tested on latest versions of Chrome, Firefox, Safari, and Edge
-
-## Development
-
-### Local Setup
-
-1. Clone the repository
-2. Make your changes to the appropriate files
-3. Test using the debug parameters
-4. Submit a pull request
-
-### Key Components
-
-- **WalkthroughState**: Reactive state management using Glimmer tracking
-- **FirstTimeModal**: Main modal component using Discourse's DModal
-- **Theme Initializer**: API initializer that triggers the modal display
-
-## Customization Tips
-
-### Change Modal Appearance
-
-Edit [`common.scss`](common/common.scss) to customize colors, spacing, and layout.
-
-### Modify Timing
-
-Adjust the delay in [`theme-initializer.gjs`](javascripts/discourse/api-initializers/theme-initializer.gjs):
-
-```javascript
-setTimeout(() => {
-  walkthroughState.isVisible = true;
-}, 500); // Change delay here (milliseconds)
-```
-
-### Add More Sections
-
-Add additional objects to the `forumSections` array in the modal component. Each section requires:
-- `id`: Unique identifier
-- `imgUrl`: Image URL for the section
-- `title`: Section heading
-- `subtitle`: Descriptive text
-- `btnLabel`: Button text
-- `action`: URL or route to navigate to
+1. Test with different user scenarios (new users, existing users, grace period)
+2. Ensure accessibility compliance
+3. Test across different screen sizes
+4. Verify locale string functionality
 
 ## License
 
-[Add your license here]
-
-## Credits
-
-Developed for Discourse forums to improve new user onboarding and community engagement.
-
-## Support
-
-For issues, questions, or contributions:
-- **Issues**: [GitHub Issues](https://github.com/noahLovell/discourse-first-time-experience/issues)
-- **Discussions**: [Discourse Meta](https://meta.discourse.org/)
-
-## Version
-
-Current version: 0.0.1
-
-## Requirements
-
-- Discourse version: 1.8.0+
-- Theme component (not a standalone theme)
+This theme component is released under the standard Discourse theme component license.

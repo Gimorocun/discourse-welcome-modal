@@ -1,3 +1,72 @@
-.watch-category-action {
-  margin: 0.25em 0;
+@use "lib/viewport";
+
+.modal-content {
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0 0 8px;
+  }
+
+  // Small breakpoint: always stacked list regardless of layout
+  @include viewport.until(sm) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      img {
+        width: 100%;
+      }
+
+      .card-content {
+        margin: 0;
+      }
+    }
+  }
+
+  &.grid-layout {
+    @include viewport.from(sm) {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+
+      .card-content {
+        margin-top: 8px;
+      }
+    }
+  }
+
+  &.list-layout {
+    @include viewport.from(sm) {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .card {
+        display: flex;
+        gap: 16px;
+
+        img {
+          width: 35%;
+          object-fit: cover;
+        }
+
+        .card-content {
+          margin: 8px 0;
+        }
+      }
+    }
+  }
 }
