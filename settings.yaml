@@ -1,3 +1,7 @@
+enabled:
+  type: bool
+  default: false
+  description: "Toggle to enable or disable the welcome modal feature"
 feature_enabled_date:
   type: string
   default: "2026-01-01"

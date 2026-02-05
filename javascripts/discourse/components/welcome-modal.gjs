@@ -25,6 +25,19 @@ export default class WelcomeModal extends Component {
     }
 
     async determineModalVisibility() {
+        // Check for force query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const forceShow = urlParams.get('show-welcome-modal') === 'true';
+        
+        if (forceShow) {
+            this.shown = true;
+            return;
+        }
+        
+        if (!settings.enabled) {
+            return;
+        }
+
         // 1. Quick exit for anonymous or repeat visitors
         if (!this.currentUser || localStorage.getItem("has_seen_welcome_modal") === "true") {
             return;
