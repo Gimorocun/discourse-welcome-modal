@@ -1,6 +1,6 @@
 # Discourse Welcome Modal
 
-A Discourse theme component that displays a customizable welcome modal to help onboard new users and guide them through their first-time experience.
+A Discourse theme component that displays a customizable welcome modal to help onboard new users and re-engage returning community members.
 
 ## Overview
 

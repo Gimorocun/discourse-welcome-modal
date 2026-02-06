@@ -2,7 +2,7 @@
   "name": "Discourse Welcome Modal",
   "component": true,
   "license_url": null,
-  "about_url": null,
+  "about_url": "https://meta.discourse.org/t/discourse-welcome-modal/395095",
   "authors": "Noah Lovell",
   "theme_version": "0.0.1",
   "minimum_discourse_version": null,
@@ -10,5 +10,5 @@
   "assets": {},
   "color_schemes": {},
   "modifiers": {},
-  "learn_more": ""
+  "learn_more": "https://meta.discourse.org/t/discourse-welcome-modal/395095"
 }

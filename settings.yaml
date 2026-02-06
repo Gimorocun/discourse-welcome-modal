@@ -1,33 +1,37 @@
 enabled:
   type: bool
   default: false
-  description: "Toggle to enable or disable the welcome modal feature"
+  description: "Enable the welcome modal feature. When disabled, no modals will be shown to any users."
 feature_enabled_date:
   type: string
-  default: "2026-01-01"
-  description: "Enter date in YYYY-MM-DD format"
+  default: "2026-02-06"
+  description: "Date when the welcome modal feature was first enabled (YYYY-MM-DD format). Users who registered before this date are considered 'existing users'."
 grace_period_months:
   type: integer
   default: 3
-  description: "Number of months after feature enable date to silently mark existing users as seen"
+  description: "Grace period in months for existing users. During this period, existing users won't see the modal. Set to 0 for no grace period (modal shows immediately)."
+returning_user_inactivity_months:
+  type: integer
+  default: 6
+  description: "Consider a user as 'returning' if they haven't seen the modal for this many months. Lower values show the modal more frequently."
 card_layout:
   type: enum
   default: "grid"
-  description: "Choose how cards are displayed in the welcome modal"
+  description: "Layout style for welcome cards: 'grid' shows cards in a responsive grid, 'list' shows cards in a vertical list with images on the side."
   choices:
     - grid
     - list
 card_content:
   type: objects
   default: []
-  description: "Configure the cards shown in the welcome modal"
+  description: "Configure the welcome cards displayed in the modal. Each card can be shown to specific user types (new users, returning users, or both)."
   schema:
     name: community_card
     properties:
       id:
         type: string
         required: true
-        description: "Unique identifier for this card"
+        description: "Unique identifier for this card (used internally, not displayed to users)"
       title:
         type: string
         required: true
@@ -43,14 +47,20 @@ card_content:
       altText:
         type: string
         required: true
-        description: "Alt text for the card image (accessibility)"
+        description: "Accessibility text describing the image"
       btnLabel:
         type: string
         required: true
-        description: "Text displayed on the card's action button"
+        description: "Text displayed on the card's action button (e.g., 'Learn More', 'Get Started')"
       action:
         type: string
         required: true
-        description: "URL or route to navigate to when button is clicked"
-        validations:
-          url: true
+        description: "URL or route to navigate to when button is clicked. Use full URLs for external links (https://example.com) or Discourse routes (/categories, /latest, etc.)"
+      displayFor:
+        type: enum
+        required: true
+        description: "Control which users see this card based on their status"
+        choices:
+          - both
+          - new_users
+          - returning_users
