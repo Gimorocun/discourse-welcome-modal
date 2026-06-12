@@ -1,0 +1,14 @@
+zh_CN:
+  theme_metadata:
+    description: "提醒使用默认用户名的用户设置自定义用户名"
+  set_username_modal:
+    title: 设置用户名
+    description: 您当前使用的是临时用户名，请设置一个独特的用户名以继续使用论坛。
+    username_label: 用户名
+    submit_btn: 完成
+    error:
+      blank: 请输入用户名
+      default_prefix: 请设置非默认格式的用户名
+      unavailable: 该用户名不可用
+      unavailable_with_suggestion: "该用户名不可用，建议使用：%{suggestion}"
+      generic: 更新用户名失败，请重试

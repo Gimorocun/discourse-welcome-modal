@@ -1,14 +1,14 @@
 {
-  "name": "Discourse Welcome Modal",
+  "name": "Discourse Set Username Modal",
   "component": true,
   "license_url": null,
-  "about_url": "https://meta.discourse.org/t/discourse-welcome-modal/395095",
-  "authors": "Noah Lovell",
-  "theme_version": "0.0.1",
+  "about_url": null,
+  "authors": "Iryuu",
+  "theme_version": "1.0.0",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
   "assets": {},
   "color_schemes": {},
   "modifiers": {},
-  "learn_more": "https://meta.discourse.org/t/discourse-welcome-modal/395095"
+  "learn_more": null
 }

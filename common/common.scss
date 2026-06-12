@@ -1,72 +1,28 @@
-@use "lib/viewport";
-
-.modal-content {
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
+.set-username-modal {
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  h3 {
+  .modal-description {
     margin: 0;
   }
 
-  p {
-    margin: 0 0 8px;
-  }
+  .username-field {
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
 
-  // Small breakpoint: always stacked list regardless of layout
-  @include viewport.until(sm) {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    .card {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      img {
-        width: 100%;
-      }
-
-      .card-content {
-        margin: 0;
-      }
+    input {
+      width: 100%;
     }
   }
 
-  &.grid-layout {
-    @include viewport.from(sm) {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
-
-      .card-content {
-        margin-top: 8px;
-      }
-    }
-  }
-
-  &.list-layout {
-    @include viewport.from(sm) {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-
-      .card {
-        display: flex;
-        gap: 16px;
-
-        img {
-          width: 35%;
-          object-fit: cover;
-        }
-
-        .card-content {
-          margin: 8px 0;
-        }
-      }
-    }
+  .error-message {
+    color: var(--danger);
+    margin: 0;
   }
 }

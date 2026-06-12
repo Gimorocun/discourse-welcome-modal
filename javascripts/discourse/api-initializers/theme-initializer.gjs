@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
-import WelcomeModal from "../components/welcome-modal";
+import SetUsernameModal from "../components/set-username-modal";
 
 export default apiInitializer((api) => {
-  api.renderInOutlet("above-main-container", WelcomeModal);
+  api.renderInOutlet("above-main-container", SetUsernameModal);
 });

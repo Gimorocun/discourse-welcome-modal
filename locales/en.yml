@@ -1,6 +1,14 @@
 en:
   theme_metadata:
-    description: ''
-  discourse_welcome_modal:
-    title: Join the conversation
-    close_btn: Done
+    description: "Prompt users with default usernames to choose a custom username"
+  set_username_modal:
+    title: Choose your username
+    description: Your current username is temporary. Please choose a unique username to continue.
+    username_label: Username
+    submit_btn: Done
+    error:
+      blank: Please enter a username
+      default_prefix: Please choose a username other than the default format
+      unavailable: This username is not available
+      unavailable_with_suggestion: "This username is not available. Try: %{suggestion}"
+      generic: Failed to update username. Please try again.
