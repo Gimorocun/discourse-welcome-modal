@@ -34,27 +34,27 @@ card_content:
         description: "Unique identifier for this card (used internally, not displayed to users)"
       title:
         type: string
-        required: true
+        required: false
         description: "Main heading text for the card"
       subtitle:
         type: string
-        required: true
+        required: false
         description: "Descriptive text shown below the title"
       imgUrl:
         type: upload
-        required: true
+        required: false
         description: "Image to display on the card"
       altText:
         type: string
-        required: true
+        required: false
         description: "Accessibility text describing the image"
       btnLabel:
         type: string
-        required: true
+        required: false
         description: "Text displayed on the card's action button (e.g., 'Learn More', 'Get Started')"
       action:
         type: string
-        required: true
+        required: false
         description: "URL or route to navigate to when button is clicked. Use full URLs for external links (https://example.com) or Discourse routes (/categories, /latest, etc.)"
       displayFor:
         type: enum
