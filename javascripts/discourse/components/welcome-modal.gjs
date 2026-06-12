@@ -208,6 +208,7 @@ export default class WelcomeModal extends Component {
 
     @action
     dismissModal() {
+        return;
         this.shown = false;
         // Persist the timestamp when they saw/dismissed the modal
         localStorage.setItem("welcome_modal_last_seen_at", new Date().toISOString());
@@ -251,11 +252,12 @@ export default class WelcomeModal extends Component {
         }
     }
 
+    // @closeModal={{this.dismissModal}}
+
     <template>
         {{#if this.showModal}}
             <DModal
                 @title={{this.modalTitle}}
-                @closeModal={{this.dismissModal}}
                 class="welcome-modal"
             >
                 <:body>
@@ -272,8 +274,12 @@ export default class WelcomeModal extends Component {
                                     />
                                 {{/if}}
                                 <div class="card-content">
-                                    <h3 id="card-title-{{card.id}}">{{card.title}}</h3>
-                                    <p>{{card.subtitle}}</p>
+                                    {{#if card.title}}
+                                        <h3 id="card-title-{{card.id}}">{{card.title}}</h3>
+                                    {{/if}}
+                                    {{#if card.subtitle}}
+                                        <p>{{card.subtitle}}</p>
+                                    {{/if}}
                                     {{#if card.btnLabel}}
                                         <DButton
                                             @action={{fn this.handleCardAction card}}
