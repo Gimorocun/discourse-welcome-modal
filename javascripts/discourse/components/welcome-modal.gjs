@@ -262,22 +262,26 @@ export default class WelcomeModal extends Component {
                     <div class="modal-content {{this.cardLayout}}-layout" role="main" aria-label="Welcome content">
                         {{#each this.cardContent as |card|}}
                             <article class="card" role="article" aria-labelledby="card-title-{{card.id}}">
-                                <img
-                                    src={{card.imgUrl}}
-                                    alt={{card.altText}}
-                                    loading="lazy"
-                                    onerror="this.style.display='none'"
-                                    role="img"
-                                />
+                                {{#if card.imgUrl}}
+                                    <img
+                                        src={{card.imgUrl}}
+                                        alt={{card.altText}}
+                                        loading="lazy"
+                                        onerror="this.style.display='none'"
+                                        role="img"
+                                    />
+                                {{/if}}
                                 <div class="card-content">
                                     <h3 id="card-title-{{card.id}}">{{card.title}}</h3>
                                     <p>{{card.subtitle}}</p>
-                                    <DButton
-                                        @action={{fn this.handleCardAction card}}
-                                        @translatedLabel={{card.btnLabel}}
-                                        class="btn btn-primary btn-small"
-                                        aria-describedby="card-title-{{card.id}}"
-                                    />
+                                    {{#if card.btnLabel}}
+                                        <DButton
+                                            @action={{fn this.handleCardAction card}}
+                                            @translatedLabel={{card.btnLabel}}
+                                            class="btn btn-primary btn-small"
+                                            aria-describedby="card-title-{{card.id}}"
+                                        />
+                                    {{/if}}
                                 </div>
                             </article>
                         {{/each}}
