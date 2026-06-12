@@ -2,3 +2,11 @@ enabled:
   type: bool
   default: true
   description: "Enable the set username modal for users whose username starts with user_."
+modal_image:
+  type: upload
+  default: ""
+  description: "Optional image displayed at the top of the modal."
+modal_image_alt:
+  type: string
+  default: ""
+  description: "Accessibility text for the modal image."

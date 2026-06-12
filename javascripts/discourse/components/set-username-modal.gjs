@@ -57,6 +57,14 @@ export default class SetUsernameModal extends Component {
     return I18n.t(themePrefix("set_username_modal.submit_btn"));
   }
 
+  get modalImageUrl() {
+    return settings?.modal_image || null;
+  }
+
+  get modalImageAlt() {
+    return settings?.modal_image_alt || "";
+  }
+
   @action
   handleUsernameInput(event) {
     this.newUsername = event.target.value;
@@ -126,6 +134,15 @@ export default class SetUsernameModal extends Component {
       <DModal @title={{this.modalTitle}} class="set-username-modal">
         <:body>
           <div class="modal-content" role="main">
+            {{#if this.modalImageUrl}}
+              <img
+                src={{this.modalImageUrl}}
+                alt={{this.modalImageAlt}}
+                class="modal-image"
+                loading="lazy"
+              />
+            {{/if}}
+
             <p class="modal-description">{{this.modalDescription}}</p>
 
             <div class="username-field">
